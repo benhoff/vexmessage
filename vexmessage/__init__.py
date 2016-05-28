@@ -6,7 +6,7 @@ VERSION = '0.0.1'
 
 def create_vex_message(target, source, type, *msg, version=VERSION):
     target = target.encode('ascii')
-    serialization = pickle.dumps(source, version, type, *msg)
+    serialization = pickle.dumps((source, version, type, *msg))
     return (target, serialization)
 
 
@@ -17,7 +17,7 @@ def decode_vex_message(frame):
     version = deserial[1]
     # probably have a interp lib here /shame
     type = deserial[2]
-    content = deserial[3:]
+    content = deserial[3]
 
     return Message(target, source, version, type, *content)
 
@@ -28,4 +28,4 @@ class Message:
         self.source = source
         self.VERSION = VERSION
         self.type = type
-        self.content = content
+        self.contents = content
