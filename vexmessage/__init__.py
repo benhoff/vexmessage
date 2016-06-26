@@ -1,5 +1,5 @@
-import pickle
-import textwrap
+import pickle as _pickle
+import textwrap as _textwrap
 
 
 VERSION = '0.0.1'
@@ -7,13 +7,13 @@ VERSION = '0.0.1'
 
 def create_vex_message(target, source, type, *msg, version=VERSION):
     target = target.encode('ascii')
-    serialization = pickle.dumps((source, version, type, *msg))
+    serialization = _pickle.dumps((source, version, type, *msg))
     return (target, serialization)
 
 
 def decode_vex_message(frame):
     target = frame[0].decode('ascii')
-    deserial = pickle.loads(frame[1])
+    deserial = _pickle.loads(frame[1])
     source = deserial[0]
     version = deserial[1]
     # probably have a interp lib here /shame
@@ -42,4 +42,10 @@ class Message:
                      self.VERSION,
                      self.contents)
 
-        return textwrap.fill(s)
+        return _textwrap.fill(s)
+
+
+class VexTypes:
+    command = 'CMD'
+    response = 'RSP'
+    message = 'MSG'
