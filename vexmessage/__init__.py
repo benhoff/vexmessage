@@ -1,4 +1,5 @@
 import pickle
+import textwrap
 
 
 VERSION = '0.0.1'
@@ -29,3 +30,16 @@ class Message:
         self.VERSION = VERSION
         self.type = type
         self.contents = content
+
+    def __repr__(self):
+        s = "type: {}  target: {}  source: {}  version: {}  contents: {}"
+        target = self.target
+        if target == '':
+            target = 'all'
+        s = s.format(self.type,
+                     target,
+                     self.source,
+                     self.VERSION,
+                     self.contents)
+
+        return textwrap.fill(s)
