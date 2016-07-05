@@ -2,12 +2,12 @@ import pickle as _pickle
 import textwrap as _textwrap
 
 
-VERSION = '0.0.1'
+VERSION = '0.1.0'
 
 
-def create_vex_message(target, source, type, *msg, version=VERSION):
+def create_vex_message(target, source, type, version=VERSION, **msg):
     target = target.encode('ascii')
-    serialization = _pickle.dumps((source, version, type, *msg))
+    serialization = _pickle.dumps((source, version, type, msg))
     return (target, serialization)
 
 
@@ -20,11 +20,11 @@ def decode_vex_message(frame):
     type = deserial[2]
     content = deserial[3]
 
-    return Message(target, source, version, type, *content)
+    return Message(target, source, version, type, **content)
 
 
 class Message:
-    def __init__(self, target, source, version, type, *content):
+    def __init__(self, target, source, version, type, **content):
         self.target = target
         self.source = source
         self.VERSION = VERSION
@@ -49,3 +49,4 @@ class VexTypes:
     command = 'CMD'
     response = 'RSP'
     message = 'MSG'
+    # STAUS ?
