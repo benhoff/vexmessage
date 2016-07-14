@@ -2,16 +2,10 @@ import pickle as _pickle
 import textwrap as _textwrap
 
 
-VERSION = '0.1.0'
+VERSION = '0.2.0'
 
 
-def create_vex_message(target, source, type, version=VERSION, **msg):
-    target = target.encode('ascii')
-    serialization = _pickle.dumps((source, version, type, msg))
-    return (target, serialization)
-
-
-def decode_vex_message(frame):
+def decode(frame):
     target = frame[0].decode('ascii')
     deserial = _pickle.loads(frame[1])
     source = deserial[0]
@@ -21,6 +15,20 @@ def decode_vex_message(frame):
     content = deserial[3]
 
     return Message(target, source, version, type, **content)
+
+
+def encode(target, source, type, version=VERSION, **message):
+    target = target.encode('ascii')
+    serialization = _pickle.dumps((source, version, type, message))
+    return (target, serialization)
+
+
+def create_vex_message(target, source, type, version=VERSION, **msg):
+    return encode(target, source, type, version, **msg)
+
+
+def decode_vex_message(frame):
+    return decode(frame)
 
 
 class Message:
