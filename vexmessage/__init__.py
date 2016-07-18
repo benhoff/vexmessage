@@ -9,17 +9,16 @@ def decode(frame):
     target = frame[0].decode('ascii')
     deserial = _pickle.loads(frame[1])
     source = deserial[0]
-    version = deserial[1]
-    # probably have a interp lib here /shame
-    type = deserial[2]
+    type = deserial[1]
+    version = deserial[2]
     content = deserial[3]
 
-    return Message(target, source, version, type, **content)
+    return Message(target, source, type, version, **content)
 
 
 def encode(target, source, type, version=VERSION, **message):
     target = target.encode('ascii')
-    serialization = _pickle.dumps((source, version, type, message))
+    serialization = _pickle.dumps((source, type, version, message))
     return (target, serialization)
 
 
@@ -32,11 +31,11 @@ def decode_vex_message(frame):
 
 
 class Message:
-    def __init__(self, target, source, version, type, **content):
+    def __init__(self, target, source, type, version=VERSION, **content):
         self.target = target
         self.source = source
-        self.VERSION = VERSION
         self.type = type
+        self.VERSION = version
         self.contents = content
 
     def __repr__(self):
