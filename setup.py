@@ -10,7 +10,7 @@ with open(os.path.join(directory, 'README.rst')) as f:
 
 setup(
     name="vexmessage",
-    version='0.2.0',
+    version='0.3.0',
     description='messaging helper for vexbot',
     # long_description=long_description,
     url='https://github.com/benhoff/vexmessage',

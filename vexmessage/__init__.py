@@ -70,7 +70,7 @@ def create_request(source: str, type: str, version: str=VERSION, **request):
     return (source, serialization)
 
 
-class ReqMessage:
+class Request:
     def __init__(self,
                  command: str,
                  source: str,
@@ -83,8 +83,6 @@ class ReqMessage:
         self.version = version
         self.args = args
         self.kwargs = kwargs
-
-
 
 
 class VexTypes:
