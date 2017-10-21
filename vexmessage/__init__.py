@@ -36,7 +36,7 @@ class Message:
         return _textwrap.fill(s)
 
 def decode(frame) -> Message:
-    target = frame[0].decode('ascii')
+    target = frame[0].decode('utf8')
     deserial = _json.loads(frame[1].decode('utf8'))
     source = deserial[0]
     uuid = deserial[1]
@@ -52,7 +52,7 @@ def encode(target: str,
            version: str=VERSION,
            **message) -> tuple:
 
-    target = target.encode('ascii')
+    target = target.encode('utf8')
     serialization = _json.dumps((source, uuid, version, message)).encode('utf8')
     return (target, serialization)
 
@@ -71,7 +71,7 @@ def decode_vex_message(frame):
 
 
 def create_request(source: str, type: str, version: str=VERSION, **request):
-    source = source.encode('ascii')
+    source = source.encode('utf8')
     serialization = _json.dumps(('', type, version, request)).encode('utf8')
     return (source, serialization)
 
