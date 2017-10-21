@@ -1,19 +1,25 @@
-import pickle as _pickle
+import json as _json
 import textwrap as _textwrap
 
 
-VERSION = '0.3.0'
+VERSION = '0.4.0'
 
 class Message:
     def __init__(self,
                  target: str,
-                 source, type,
+                 source: str,
+                 uuid: str,
                  version: str=VERSION,
                  **content):
+        """
+        target -> where this message is to go
+        source -> string representation of where it's from 
+        uuid -> UUID
+        """
 
         self.target = target
         self.source = source
-        self.type = type
+        self.uuid = uuid
         self.VERSION = version
         self.contents = content
 
@@ -22,8 +28,7 @@ class Message:
         target = self.target
         if target == '':
             target = 'all'
-        s = s.format(self.type,
-                     target,
+        s = s.format(target,
                      self.source,
                      self.VERSION,
                      self.contents)
@@ -32,48 +37,49 @@ class Message:
 
 def decode(frame) -> Message:
     target = frame[0].decode('ascii')
-    deserial = _pickle.loads(frame[1])
+    deserial = _json.loads(frame[1].decode('utf8'))
     source = deserial[0]
-    type = deserial[1]
+    uuid = deserial[1]
     version = deserial[2]
     content = deserial[3]
 
-    return Message(target, source, type, version, **content)
+    return Message(target, source, uuid, version, **content)
 
 
 def encode(target: str,
            source: str,
-           type: str,
+           uuid: str,
            version: str=VERSION,
            **message) -> tuple:
 
     target = target.encode('ascii')
-    serialization = _pickle.dumps((source, type, version, message))
+    serialization = _json.dumps((source, uuid, version, message)).encode('utf8')
     return (target, serialization)
 
 
 def create_vex_message(target: str,
                        source: str,
-                       type: str,
+                       uuid: str,
                        version: str=VERSION,
                        **msg) -> Message:
 
-    return encode(target, source, type, version, **msg)
+    return encode(target, source, uuid, version, **msg)
 
 
 def decode_vex_message(frame):
     return decode(frame)
 
+
 def create_request(source: str, type: str, version: str=VERSION, **request):
     source = source.encode('ascii')
-    serialization = _pickles.dumps(('', type, version, request))
+    serialization = _json.dumps(('', type, version, request)).encode('utf8')
     return (source, serialization)
 
 
 class Request:
     def __init__(self,
-                 command: str,
-                 source: str,
+                 command: str='',
+                 source: str='',
                  version: str=VERSION,
                  *args,
                  **kwargs):
